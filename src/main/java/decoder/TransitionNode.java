@@ -22,7 +22,12 @@ public class TransitionNode implements TreeNode {
     }
 
     @Override
+    public char getDecodedChar() {
+        throw new IllegalStateException("Transition node cannot have a symbol.");
+    }
+
+    @Override
     public String getClassType() {
-        return "TransitionNode";
+        return TreeNode.TRANSITION_NODE;
     }
 }

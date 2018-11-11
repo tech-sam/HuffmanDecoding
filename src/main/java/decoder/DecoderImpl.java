@@ -1,5 +1,7 @@
 package decoder;
 
+import sun.reflect.generics.tree.Tree;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -47,7 +49,7 @@ public class DecoderImpl implements Decoder {
             Map<Character, TreeNode> treeMap = temp.getTreeMap();
             char currentCode = codes.charAt(i);
             if (treeMap.keySet().contains(currentCode)) {
-                if (treeMap.get(currentCode).getClassType().equals("LeafNode")) {
+                if (TreeNode.LEAF_NODE.equals(treeMap.get(currentCode).getClassType())) {
                     throw new IllegalStateException("not a prefix coding");
                 }
             } else {
@@ -59,7 +61,7 @@ public class DecoderImpl implements Decoder {
         TreeNode leafNode = new LeafNode(symbol);
         char lastCode = codes.charAt(codes.length() - 1);
         if (temp.getTreeMap().keySet().contains(lastCode)) {
-            if (temp.getTreeMap().get(lastCode).getClassType().equals("Transition Node")) {
+            if (TreeNode.TRANSITION_NODE.equals(temp.getTreeMap().get(lastCode).getClassType())) {
                 throw new IllegalStateException("Not a prefix coding.");
             } else {
                 throw new IllegalStateException("Code already used for other symbol.");
@@ -71,8 +73,35 @@ public class DecoderImpl implements Decoder {
     }
 
     @Override
-    public String decode(String encodedMessgae) throws IllegalStateException {
-        return null;
+    public String decode(String encodedMessage) throws IllegalStateException {
+        if (encodedMessage == null || "".equals(encodedMessage)) {
+            throw new IllegalArgumentException("message cannot be null or empty!!");
+        }
+        char encodedChars[] = encodedMessage.toCharArray();
+        StringBuffer decodedBuffer = new StringBuffer();
+        TreeNode treeNode = rootNode;
+
+
+        for (char ch : encodedChars) {
+            if (!codingSymbols.contains(ch)) {
+                throw new IllegalStateException("Message out of code symbol set");
+            }
+            Map<Character, TreeNode> treeMap = treeNode.getTreeMap();
+
+            if (treeMap.containsKey(ch)) {
+                if (TreeNode.TRANSITION_NODE.equals(treeMap.get(ch).getClassType())) {
+                    treeNode = treeMap.get(ch);
+                } else {
+                    decodedBuffer.append(treeMap.get(ch).getDecodedChar());
+                    treeNode = rootNode;
+                }
+
+            } else {
+                throw new IllegalStateException("cannot decode message !!"+ch);
+            }
+        }
+
+        return decodedBuffer.toString();
     }
 
     @Override

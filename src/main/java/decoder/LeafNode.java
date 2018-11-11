@@ -26,7 +26,12 @@ public class LeafNode implements TreeNode {
     }
 
     @Override
+    public char getDecodedChar() throws IllegalStateException {
+        return this.symbol;
+    }
+
+    @Override
     public String getClassType() {
-        return "LeafNode";
+        return TreeNode.LEAF_NODE;
     }
 }

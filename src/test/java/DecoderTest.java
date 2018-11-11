@@ -26,16 +26,10 @@ public class DecoderTest {
     @Before
     public void setUp() {
         String binaryCodeSymbols = "01";
-        String hexCodeSymbols = "0123456789abcdef";
-
-        // decoder with binary code symbols
         d1 = new DecoderImpl(binaryCodeSymbols);
 
-        // decoder with hexadecimal code symbols
-//		d2 = new DecoderImpl(hexCodeSymbols);
-//
-//		// decoder with coding symbols 'a', 'b', and 'c'
-//		d3 = new DecoderImpl("abc");
+        String hexCodeSymbols = "0123456789abcdef";
+        d2 = new DecoderImpl(hexCodeSymbols);
     }
 
 
@@ -44,15 +38,23 @@ public class DecoderTest {
      * codes are passed.
      */
     @Test
-    public void testValidAddCode() {
-        try {
-            d1.addCode('1', "001");
-           // d1.addCode('2', "010");
+    public void testValidDecode() {
+        d1.addCode('a', "00");
+        d1.addCode('b', "01");
+        d1.addCode('c', "10");
+        d1.addCode('d', "11");
 
-        } catch (Exception e) {
-            fail();
-        }
+        assertEquals(d1.decode("00"), "a");
+        assertEquals(d1.decode("01"), "b");
+        assertEquals(d1.decode("10"), "c");
+        assertEquals(d1.decode("11"), "d");
+
+        d2.addCode('a', "a");
+        d2.addCode('b', "b");
+        d2.addCode('c', "c");
+        d2.addCode('1', "001");
+        d2.addCode('2', "1ef");
+        assertEquals(d2.decode("abc0011ef0011efacb001001"), "abc1212acb11");
     }
-
 
 }
