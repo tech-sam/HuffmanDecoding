@@ -50,7 +50,7 @@ Applying this process to the encoded message 10001101: we use the first three sy
 
 decodes to the string “ace”.
 
-A complete coding tree is full: each transition node has children to its full capacity (2 above, since the tree is binary).
+A complete coding tree is full: each transition node has children to its full capacity (2 above, since the tree is binary)
 
 
 credit goes to [Northeastern University](https://course.ccs.neu.edu)
